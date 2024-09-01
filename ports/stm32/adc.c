@@ -169,6 +169,7 @@
 #define VBAT_DIV (4)
 #elif defined(STM32H723xx) || defined(STM32H733xx) || \
     defined(STM32H743xx) || defined(STM32H747xx) || \
+    defined(STM32H753xx) || \
     defined(STM32H7A3xx) || defined(STM32H7A3xxQ) || \
     defined(STM32H7B3xx) || defined(STM32H7B3xxQ) || \
     defined(STM32H750xx)
@@ -386,7 +387,11 @@ static void adcx_init_periph(ADC_HandleTypeDef *adch, uint32_t resolution) {
 
 static void adc_init_single(pyb_obj_adc_t *adc_obj, ADC_TypeDef *adc) {
     adc_obj->handle.Instance = adc;
+    #if defined(STM32H7)
+    adcx_init_periph(&adc_obj->handle, ADC_RESOLUTION_16B);
+    #else
     adcx_init_periph(&adc_obj->handle, ADC_RESOLUTION_12B);
+    #endif
 
     #if (defined(STM32G4) || defined(STM32L4)) && defined(ADC_DUALMODE_REGSIMULT_INJECSIMULT)
     ADC_MultiModeTypeDef multimode;
